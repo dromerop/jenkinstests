@@ -1,0 +1,19 @@
+pipeline {
+  agent {
+    kubernetes {
+      defaultContainer ''
+      yamlFile ''
+    }
+  }
+
+  stages {
+    stage('CI - pnpm') {
+      stages {
+        stage('CI - configuracion pnpm y node') {
+
+        }
+      }
+    }
+  }
+
+}
