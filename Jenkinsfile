@@ -6,5 +6,10 @@ pipeline {
         sh 'echo "asd"'
       }
     }
+    stage('Segundo paso'){
+      steps {
+        sh 'node --version'
+      }
+    }
   }
 }
