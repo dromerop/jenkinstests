@@ -19,8 +19,55 @@ spec:
       command:
         - cat
       tty: true
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "128Mi"
+        limits:
+          cpu: "1000m"
+          memory: "512Mi"
     - name: kubectl
       image: alpine/k8s:1.34.1
       command:
         - cat
       tty: true
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "128Mi"
+        limits:
+          cpu: "1000m"
+          memory: "512Mi"
+    - name: buildkit
+      image: moby/buildkit:rootless
+      command:
+        - cat
+      tty: true
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "128Mi"
+        limits:
+          cpu: "1000m"
+          memory: "512Mi"
+      volumeMounts:
+        - name: regcred-dh
+          mountPath: /docker-configs/dockerhub/config.json
+          readOnly: true
+        - name: regcred-gh
+          mountPath: /docker-configs/github/config.json
+          readOnly: true
+
+  volumes:
+    - name: regcred-dh
+      secret:
+        secretName: regcred-dh
+        items:
+          - key: .dockerconfigjson
+            path: config.json
+    - name: regcred-gh
+      secret:
+        secretName: regcred-gh
+        items:
+          - key: .dockerconfigjson
+            path: config.json

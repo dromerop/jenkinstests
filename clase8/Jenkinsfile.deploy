@@ -5,15 +5,91 @@ pipeline {
       yamlFile ''
     }
   }
-
+  environment{
+      IMAGE_NAME = 'curso-contenedores'
+      DH_REPO = 'carlosmarind/curso-contenedores'
+      GH_REPO = 'ghcr.io/carlosmarind/curso-contenedores'
+      K8S_NAMESPACE = 'curso-contenedores'
+  }
   stages {
     stage('CI - pnpm') {
       stages {
         stage('CI - configuracion pnpm y node') {
+          steps {
+            container('pnpm') {
+            sh '''
+              pnpm install --frozen-lockfile
+            '''
+            }
+          }
+        }
+        stage('CI - Revision de linter') {
+          steps {
+            container('pnpm') {
+              sh '''
+                pnpm test
+              '''
+              }
+          }
+        }
 
+        stage('CI - Ejecucion de build') {
+          steps {
+            container('pnpm') {
+              sh '''
+                pnpm build
+              '''
+              }
+          }
+        }
+
+        stage('CI - Obtener server') {
+          steps {
+            container('pnpm') {
+
+              env.APP_SEMANTIC_VERSION - sh(
+                script: '''
+
+                '''
+              )
+
+            }
+          }
+        }
+
+      }
+    }
+    stage('CD - build y push imagen'){
+      steps {
+        script {
+          if(!env.APP_SEMANTIC_VERSION?.trim()){
+            error('APP_SEMANTIC_VERSION  no esta definido')
+          }
+          container('buildkit'){
+            sh '''
+              export DOCKER_CONFIG=/docker-configs/dockerhub
+              test -s "${DOCKER_CONFIG}/config.json"
+
+              buildctl-demonless.sh build \
+              --frontend dockerfile.v0 \
+              --local context-. \
+              --local dockerfile=. \
+              --output type=image,name=${DH_REPO}:latest,push=true
+
+              buildctl-demonless.sh build \
+              --frontend dockerfile.v0 \
+              --local context-. \
+              --local dockerfile=. \
+              --output type=image,name=${DH_REPO}:${APP_SEMANTIC_VER},push=true
+
+              export GITHUB_CONFIG=/docker-configs/github
+              test -s "${GITHUB_CONFIG}/config.json"
+            '''
+          }
         }
       }
     }
   }
+
 
 }
