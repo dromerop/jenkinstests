@@ -7,8 +7,8 @@ pipeline {
     }
     environment{
         IMAGE_NAME = 'curso-contenedores'
-        DH_REPO = 'carlosmarind/curso-contenedores'
-        GH_REPO = 'ghcr.io/carlosmarind/curso-contenedores'
+        DH_REPO = 'dromerop/jenkinstests/curso-contenedores'
+        GH_REPO = 'ghcr.io/dromerop/curso-contenedores'
         K8S_NAMESPACE = 'curso-contenedores'
     }
     stages {
