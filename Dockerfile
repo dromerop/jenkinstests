@@ -7,7 +7,6 @@ WORKDIR /usr/app
 
 # Corepack viene con Node y permite usar la version de pnpm declarada
 # en package.json, sin instalar pnpm manualmente.
-ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 RUN corepack enable
 
 # Copiamos primero solo los archivos que definen dependencias.
