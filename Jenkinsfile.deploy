@@ -7,7 +7,7 @@ pipeline {
     }
     environment{
         IMAGE_NAME = 'curso-contenedores'
-        DH_REPO = 'dromerop/curso-contenedores'
+        DH_REPO = 'dromerocl/curso-contenedores'
         GH_REPO = 'ghcr.io/dromerop/curso-contenedores'
         K8S_NAMESPACE = 'curso-contenedores'
     }
